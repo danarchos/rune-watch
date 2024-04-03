@@ -1,3 +1,5 @@
+import { Logo } from "@/components/Logo";
+
 async function getData() {
   const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/runes`);
   if (!res.ok) {
@@ -41,8 +43,12 @@ export default async function Page() {
   // console.log(JSON.stringify(data, null, 2));
   return (
     <div className="flex-1 w-full flex flex-col items-center pb-8 px-4">
-      <h1 className="text-4xl m-8">Rune Watch</h1>
-      <div className="w-full overflow-x-auto">
+      <div className="mt-6 flex flex-row gap-2 items-center justify-center">
+        <Logo />
+        <div className="text-xs">(signet)</div>
+      </div>
+
+      <div className="w-full overflow-x-auto mt-6">
         {" "}
         {/* Make the table container scrollable */}
         <table className="min-w-full divide-y table-auto text-center">
