@@ -45,7 +45,7 @@ export default async function Page() {
     <div className="flex-1 w-full flex flex-col items-center pb-8 px-4">
       <div className="mt-6 flex flex-row gap-2 items-center justify-center">
         <Logo />
-        <div className="text-xs">(signet)</div>
+        <div className="text-sm">(signet)</div>
       </div>
 
       <div className="w-full overflow-x-auto mt-6">
@@ -80,15 +80,25 @@ export default async function Page() {
 
                   {item.title}
                 </td>
-                <td className="px-4 py-2">{item.number}</td>
-                <td className="px-4 py-2">{item.etching_block}</td>
+                <td className="px-4 py-2">#{item.number}</td>
                 <td className="px-4 py-2">
-                  {item.start === "none" ? "-" : item.start}
+                  {item.etching_block.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
                 </td>
                 <td className="px-4 py-2">
-                  {item.end === "none" ? "-" : item.end}
+                  {item.start === "none"
+                    ? "-"
+                    : item.start
+                        ?.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                        .slice(0, 10)}
                 </td>
-                <td className="px-4 py-2">{item.amount}</td>
+                <td className="px-4 py-2">
+                  {item.end === "none"
+                    ? "-"
+                    : item.end
+                        ?.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                        .slice(0, 10)}
+                </td>
+                <td className="px-4 py-2">{renderLargeNumber(item.amount)}</td>
                 <td className="px-4 py-2">{item.mints}</td>
                 <td className="px-4 py-2">{renderLargeNumber(item.cap)}</td>
                 <td className="px-4 py-2">
