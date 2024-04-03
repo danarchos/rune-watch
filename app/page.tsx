@@ -5,8 +5,7 @@ async function getData() {
     throw new Error("Failed to fetch data");
   }
 
-  return res;
-  // return res.json();
+  return res.json();
 }
 
 export default async function Page() {
