@@ -54,11 +54,11 @@ export default async function Page() {
             <th className="px-4 py-2">Mints</th>
             <th className="px-4 py-2">Cap</th>
             <th className="px-4 py-2">Remaining</th>
-            <th className="px-4 py-2">Mintable</th>
             <th className="px-4 py-2">Supply</th>
             <th className="px-4 py-2">Premine</th>
             <th className="px-4 py-2">Burned</th>
             <th className="px-4 py-2">Divisibility</th>
+            <th className="px-4 py-2">Mintable</th>
           </tr>
         </thead>
         <tbody>
@@ -83,11 +83,13 @@ export default async function Page() {
               <td className="px-4 py-2">{item.mints}</td>
               <td className="px-4 py-2">{renderLargeNumber(item.cap)}</td>
               <td className="px-4 py-2">{renderLargeNumber(item.remaining)}</td>
-              <td className="px-4 py-2">{item.mintable}</td>
               <td className="px-4 py-2">{renderLargeNumber(item.supply)}</td>
               <td className="px-4 py-2">{renderLargeNumber(item.premine)}</td>
               <td className="px-4 py-2">{item.burned}</td>
               <td className="px-4 py-2">{item.divisibility}</td>
+              <td className="px-4 py-2">
+                {item.mintable === "true" ? "🟩" : "🟥"}
+              </td>
             </tr>
           ))}
         </tbody>
