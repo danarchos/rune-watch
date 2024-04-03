@@ -1,0 +1,12 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 200 50% 3%;
+    --btn-background: 200 10% 9%;
+    --btn-background-hover: 200 10% 12%;
+    --foreground: 200 20% 96%;
+  }
+}
