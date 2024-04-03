@@ -40,60 +40,66 @@ export default async function Page() {
 
   // console.log(JSON.stringify(data, null, 2));
   return (
-    <div className="flex-1 w-full flex flex-col gap-0 items-center pb-8">
-      <h1 className={`text-4xl m-8`}>Rune Watch</h1>
-      <table className="divide-y table-auto text-center">
-        <thead>
-          <tr>
-            <th className="text-left px-4 py-2">Name</th>{" "}
-            <th className="px-4 py-2">Number</th>
-            <th className="px-4 py-2">Block</th>
-            <th className="px-4 py-2">Start</th>
-            <th className="px-4 py-2">End</th>
-            <th className="px-4 py-2">Amount</th>
-            <th className="px-4 py-2">Mints</th>
-            <th className="px-4 py-2">Cap</th>
-            <th className="px-4 py-2">Remaining</th>
-            <th className="px-4 py-2">Supply</th>
-            <th className="px-4 py-2">Premine</th>
-            <th className="px-4 py-2">Burned</th>
-            <th className="px-4 py-2">Divisibility</th>
-            <th className="px-4 py-2">Mintable</th>
-          </tr>
-        </thead>
-        <tbody>
-          {data?.data?.map((item: any, index: number) => (
-            <tr key={index}>
-              <td className="text-left px-4 py-2 flex flex-row items-center">
-                <div className="w-[50px]">
-                  <span className="text-4xl">{item.symbol}</span>
-                </div>
-
-                {item.title}
-              </td>
-              <td className="px-4 py-2">{item.number}</td>
-              <td className="px-4 py-2">{item.etching_block}</td>
-              <td className="px-4 py-2">
-                {item.start === "none" ? "-" : item.start}
-              </td>
-              <td className="px-4 py-2">
-                {item.end === "none" ? "-" : item.end}
-              </td>
-              <td className="px-4 py-2">{item.amount}</td>
-              <td className="px-4 py-2">{item.mints}</td>
-              <td className="px-4 py-2">{renderLargeNumber(item.cap)}</td>
-              <td className="px-4 py-2">{renderLargeNumber(item.remaining)}</td>
-              <td className="px-4 py-2">{renderLargeNumber(item.supply)}</td>
-              <td className="px-4 py-2">{renderLargeNumber(item.premine)}</td>
-              <td className="px-4 py-2">{item.burned}</td>
-              <td className="px-4 py-2">{item.divisibility}</td>
-              <td className="px-4 py-2">
-                {item.mintable === "true" ? "🟩" : "🟥"}
-              </td>
+    <div className="flex-1 w-full flex flex-col items-center pb-8 px-4">
+      <h1 className="text-4xl m-8">Rune Watch</h1>
+      <div className="w-full overflow-x-auto">
+        {" "}
+        {/* Make the table container scrollable */}
+        <table className="min-w-full divide-y table-auto text-center">
+          <thead>
+            <tr>
+              <th className="text-left px-4 py-2">Name</th>{" "}
+              <th className="px-4 py-2">Number</th>
+              <th className="px-4 py-2">Block</th>
+              <th className="px-4 py-2">Start</th>
+              <th className="px-4 py-2">End</th>
+              <th className="px-4 py-2">Amount</th>
+              <th className="px-4 py-2">Mints</th>
+              <th className="px-4 py-2">Cap</th>
+              <th className="px-4 py-2">Remaining</th>
+              <th className="px-4 py-2">Supply</th>
+              <th className="px-4 py-2">Premine</th>
+              <th className="px-4 py-2">Burned</th>
+              <th className="px-4 py-2">Divisibility</th>
+              <th className="px-4 py-2">Mintable</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {data?.data?.map((item: any, index: number) => (
+              <tr key={index}>
+                <td className="text-left px-4 py-2 flex flex-row items-center">
+                  <div className="w-[50px]">
+                    <span className="text-4xl">{item.symbol}</span>
+                  </div>
+
+                  {item.title}
+                </td>
+                <td className="px-4 py-2">{item.number}</td>
+                <td className="px-4 py-2">{item.etching_block}</td>
+                <td className="px-4 py-2">
+                  {item.start === "none" ? "-" : item.start}
+                </td>
+                <td className="px-4 py-2">
+                  {item.end === "none" ? "-" : item.end}
+                </td>
+                <td className="px-4 py-2">{item.amount}</td>
+                <td className="px-4 py-2">{item.mints}</td>
+                <td className="px-4 py-2">{renderLargeNumber(item.cap)}</td>
+                <td className="px-4 py-2">
+                  {renderLargeNumber(item.remaining)}
+                </td>
+                <td className="px-4 py-2">{renderLargeNumber(item.supply)}</td>
+                <td className="px-4 py-2">{renderLargeNumber(item.premine)}</td>
+                <td className="px-4 py-2">{item.burned}</td>
+                <td className="px-4 py-2">{item.divisibility}</td>
+                <td className="px-4 py-2">
+                  {item.mintable === "true" ? "🟩" : "🟥"}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }
