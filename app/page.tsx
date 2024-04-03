@@ -1,10 +1,13 @@
 async function getData() {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/runes`);
+  // const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/runes`);
+  const res = { ok: true, data: {} };
   if (!res.ok) {
     // This will activate the closest `error.js` Error Boundary
     throw new Error("Failed to fetch data");
   }
-  return res.json();
+
+  return res;
+  // return res.json();
 }
 
 export default async function Page() {
