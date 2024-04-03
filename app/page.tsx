@@ -76,7 +76,9 @@ export default async function Page() {
               <td className="px-4 py-2">
                 {item.start === "none" ? "-" : item.start}
               </td>
-              <td className="px-4 py-2">{item.end}</td>
+              <td className="px-4 py-2">
+                {item.end === "none" ? "-" : item.end}
+              </td>
               <td className="px-4 py-2">{item.amount}</td>
               <td className="px-4 py-2">{item.mints}</td>
               <td className="px-4 py-2">{renderLargeNumber(item.cap)}</td>
