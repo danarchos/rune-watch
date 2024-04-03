@@ -1,5 +1,5 @@
 async function getData() {
-  const res = await fetch("http://localhost:3000/runes");
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/runes`);
   if (!res.ok) {
     // This will activate the closest `error.js` Error Boundary
     throw new Error("Failed to fetch data");
