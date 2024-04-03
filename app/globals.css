@@ -1,6 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import url("https://fonts.googleapis.com/css2?family=Caprasimo&display=swap");
 
 @layer base {
   :root {
@@ -9,4 +10,10 @@
     --btn-background-hover: 200 10% 12%;
     --foreground: 200 20% 96%;
   }
+}
+h1 {
+}
+
+main {
+  font-family: Roboto, monospace;
 }

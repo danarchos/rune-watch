@@ -1,5 +1,3 @@
-import { Caprasimo } from "next/font/google";
-
 async function getData() {
   const res = await fetch("http://localhost:3000/runes");
   if (!res.ok) {
@@ -9,14 +7,14 @@ async function getData() {
   return res.json();
 }
 
-const caprasimo = Caprasimo({ subsets: ["latin"], weight: ["400"] });
-
 export default async function Page() {
   const data = await getData();
 
   const renderLargeNumber = (supply: string) => {
     const num = parseInt(supply);
-    if (num >= 10000000000000000000000000) {
+    if (isNaN(num)) return "-";
+
+    if (num >= 10000000000000000000000000000) {
       return "∞";
     }
 
@@ -38,9 +36,11 @@ export default async function Page() {
 
     return num;
   };
+
+  // console.log(JSON.stringify(data, null, 2));
   return (
     <div className="flex-1 w-full flex flex-col gap-0 items-center pb-8">
-      <h1 className={`${caprasimo.className} text-4xl m-8`}>Rune Watch</h1>
+      <h1 className={`text-4xl m-8`}>Rune Watch</h1>
       <table className="divide-y table-auto text-center">
         <thead>
           <tr>
