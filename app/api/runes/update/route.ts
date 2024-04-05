@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { JSDOM } from "jsdom";
 import { createClient } from "@/utils/supabase/server";
 
+export const maxDuration = 300;
+
 async function fetchAndParseHTML() {
   const response = await fetch("http://54.160.80.123:8181/runes");
   const html = await response.text();
