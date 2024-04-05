@@ -20,7 +20,14 @@ export default function Page() {
           throw new Error("Failed to fetch data");
         }
         const result = await res.json();
-        setData(result);
+        // Assuming `result.data` is the array you want to sort
+        // and that it's available directly under the `result` object.
+        // Adjust the path if your data structure is different.
+        if (result && result.data) {
+          // Sort data by rune number in ascending order
+          const sortedData = result.data.sort((a, b) => a.number - b.number);
+          setData(sortedData);
+        }
       } catch (error) {
         console.error("Fetching data failed:", error);
       }
@@ -113,7 +120,7 @@ export default function Page() {
             </tr>
           </thead>
           <tbody>
-            {data?.data
+            {data
               ?.filter((item: any) => !hidePremineRows || item.premine <= 0)
               .map((item: any, index: number) => (
                 <tr key={index}>
