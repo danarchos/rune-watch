@@ -10,15 +10,12 @@ export default function Page() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_BASE_URL}/api/runes`,
-          {
-            headers: {
-              "Content-Type": "application/json",
-              // Include other necessary headers
-            },
-          }
-        );
+        const res = await fetch(`/api/runes`, {
+          headers: {
+            "Content-Type": "application/json",
+            // Include other necessary headers
+          },
+        });
         if (!res.ok) {
           throw new Error("Failed to fetch data");
         }
