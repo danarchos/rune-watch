@@ -25,6 +25,7 @@ export default function Page() {
         // Adjust the path if your data structure is different.
         if (result && result.data) {
           // Sort data by rune number in ascending order
+          // @ts-ignore
           const sortedData = result.data.sort((a, b) => a.number - b.number);
           setData(sortedData);
         }
