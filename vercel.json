@@ -1,7 +1,7 @@
 {
   "crons": [
     {
-      "path": "api/runes/update",
+      "path": "/api/runes/update",
       "schedule": "*/30 * * * *"
     }
   ]
