@@ -147,7 +147,9 @@ export default function Page() {
                   </td>
                   {/* Item Supply */}
                   <td className="px-4 py-2">
-                    {renderLargeNumber(item.supply)}
+                    {renderLargeNumber(
+                      (item.cap * item.amount + item.premine).toString()
+                    )}
                   </td>
                   {/* Premine */}
                   <td className="px-4 py-2">
