@@ -90,7 +90,7 @@ export default function Page() {
   //   return percent.toFixed(0) + "%";
   // };
 
-  // console.log(JSON.stringify(data, null, 2));
+  console.log({ data });
 
   return (
     <div className="flex-1 w-full flex flex-col items-center pb-8 px-4">
@@ -105,6 +105,7 @@ export default function Page() {
             <tr>
               <th className="text-left px-4 py-2">Rune</th>{" "}
               <th className="px-4 py-2">Per mint</th>
+              <th className="px-4 py-2">Total mints</th>
               <th className="px-4 py-2">Circulating Supply</th>
               <th className="px-4 py-2">Max Supply</th>
               <th className="px-4 py-2">
@@ -141,19 +142,31 @@ export default function Page() {
                   <td className="px-4 py-2">
                     {renderLargeNumber(item.amount)}
                   </td>
+                  {/* Total Mints */}
+                  <td className="px-4 py-2">{renderLargeNumber(item.mints)}</td>
                   {/* Circulating Supply */}
                   <td className="px-4 py-2">
-                    {renderLargeNumber((item.mints * item.amount).toString())}
+                    {renderLargeNumber(
+                      (
+                        parseInt(item.mints) * parseInt(item.amount) +
+                        parseInt(item.premine)
+                      ).toString()
+                    )}
                   </td>
-                  {/* Item Supply */}
+                  {/* Max Supply */}
                   <td className="px-4 py-2">
                     {renderLargeNumber(
-                      (item.cap * item.amount + item.premine).toString()
+                      (
+                        parseInt(item.cap) * parseInt(item.amount) +
+                        parseInt(item.premine)
+                      ).toString()
                     )}
                   </td>
                   {/* Premine */}
                   <td className="px-4 py-2">
-                    {renderLargeNumber(item.premine > 0 ? item.premine : "-")}
+                    {renderLargeNumber(
+                      parseInt(item.premine) > 0 ? item.premine : "-"
+                    )}
                   </td>
                   {/* Divisibility */}
                   {/* <td className="px-4 py-2">{item.divisibility}</td> */}
