@@ -1,11 +1,13 @@
 "use client";
 import { Logo } from "@/components/Logo";
 import { useEffect, useState } from "react";
+import { ThreeDots } from "react-loader-spinner";
 
 export default function Page() {
   const [data, setData] = useState<any>(null);
   const [hidePremineRows, setHidePremineRows] = useState(false);
   const [blockCount, setBlockCount] = useState(1000000);
+  const [loading, setLoading] = useState(true);
 
   // useEffect does not directly support async/await, so we define an async function inside it
   useEffect(() => {
@@ -32,8 +34,10 @@ export default function Page() {
           const sortedData = result.data.sort((a, b) => a.number - b.number);
           setData(sortedData);
         }
+        setLoading(false);
       } catch (error) {
         console.error("Fetching data failed:", error);
+        setLoading(false);
       }
     }
 
@@ -87,90 +91,104 @@ export default function Page() {
         <div className="text-sm">(signet)</div>
       </div>
 
-      <div className="w-full overflow-x-auto mt-6">
-        <table className="min-w-full divide-y table-auto text-center">
-          <thead>
-            <tr>
-              <th className="text-left px-4 py-2">Rune</th>{" "}
-              <th className="px-4 py-2">Supply per mint</th>
-              <th className="px-4 py-2">Circulating Supply</th>
-              <th className="px-4 py-2">Mint transactions</th>
-              <th className="px-4 py-2">Max Supply</th>
-              <th className="px-4 py-2">
-                Premine{" "}
-                <span
-                  style={{ cursor: "pointer" }}
-                  onClick={togglePremineVisibility}
-                >
-                  {hidePremineRows ? "👀" : "🚫"}
-                </span>
-              </th>
-              {/* <th className="px-4 py-2">Divisibility</th> */}
-              <th className="px-4 py-2">Mintable</th>
-            </tr>
-          </thead>
-          <tbody>
-            {data
-              ?.filter((item: any) => !hidePremineRows || item.premine <= 0)
-              .map((item: any, index: number) => (
-                <tr key={index}>
-                  {/* Name */}
-                  <td className="text-left px-4 py-2 flex flex-row items-center">
-                    <div className="bg-[#494366] w-[40px] p-1 items-center flex justify-center mr-4 rounded">
-                      <span>#{item.number}</span>
-                    </div>
+      <ThreeDots
+        visible={loading}
+        height="80"
+        width="80"
+        color="#5744b5"
+        radius="9"
+        ariaLabel="three-dots-loading"
+        wrapperStyle={{ marginTop: 100 }}
+      />
 
-                    <div className="w-[50px] flex items-center justify-center text">
-                      <span className="text-3xl">{item.symbol}</span>
-                    </div>
+      {!loading && (
+        <div className="w-full overflow-x-auto mt-6">
+          <table className="min-w-full divide-y table-auto text-center">
+            <thead>
+              <tr>
+                <th className="text-left px-4 py-2">Rune</th>{" "}
+                <th className="px-4 py-2">Supply per mint</th>
+                <th className="px-4 py-2">Circulating Supply</th>
+                <th className="px-4 py-2">Mint transactions</th>
+                <th className="px-4 py-2">Max Supply</th>
+                <th className="px-4 py-2">
+                  Premine{" "}
+                  <span
+                    style={{ cursor: "pointer" }}
+                    onClick={togglePremineVisibility}
+                  >
+                    {hidePremineRows ? "👀" : "🚫"}
+                  </span>
+                </th>
+                {/* <th className="px-4 py-2">Divisibility</th> */}
+                <th className="px-4 py-2">Mintable</th>
+              </tr>
+            </thead>
+            <tbody>
+              {data
+                ?.filter((item: any) => !hidePremineRows || item.premine <= 0)
+                .map((item: any, index: number) => (
+                  <tr key={index}>
+                    {/* Name */}
+                    <td className="text-left px-4 py-2 flex flex-row items-center">
+                      <div className="bg-[#494366] w-[40px] p-1 items-center flex justify-center mr-4 rounded">
+                        <span>#{item.number}</span>
+                      </div>
 
-                    <span className="ml-2">{item.title}</span>
-                  </td>
-                  {/* Mint Amount */}
-                  <td className="px-4 py-2">
-                    {renderLargeNumber(item.amount)}
-                  </td>
-                  {/* Circulating Supply */}
-                  <td className="px-4 py-2">
-                    {renderLargeNumber(
-                      (
-                        parseInt(item.mints) * parseInt(item.amount) +
-                        parseInt(item.premine)
-                      ).toString()
-                    )}
-                  </td>
-                  {/* Total Mints */}
-                  <td className="px-4 py-2">{renderLargeNumber(item.mints)}</td>
+                      <div className="w-[50px] flex items-center justify-center text">
+                        <span className="text-3xl">{item.symbol}</span>
+                      </div>
 
-                  {/* Max Supply */}
-                  <td className="px-4 py-2">
-                    {renderLargeNumber(
-                      (
-                        parseInt(item.cap) * parseInt(item.amount) +
-                        parseInt(item.premine)
-                      ).toString()
-                    )}
-                  </td>
-                  {/* Premine */}
-                  <td className="px-4 py-2">
-                    {renderLargeNumber(
-                      parseInt(item.premine) > 0 ? item.premine : "-"
-                    )}
-                  </td>
-                  {/* Divisibility */}
-                  {/* <td className="px-4 py-2">{item.divisibility}</td> */}
-                  {/* Mintable */}
-                  <td className="px-4 py-2">
-                    {item.mintable === "true" &&
-                    parseInt(item.end) >= blockCount
-                      ? "🟩"
-                      : "🟥"}
-                  </td>
-                </tr>
-              ))}
-          </tbody>
-        </table>
-      </div>
+                      <span className="ml-2">{item.title}</span>
+                    </td>
+                    {/* Mint Amount */}
+                    <td className="px-4 py-2">
+                      {renderLargeNumber(item.amount)}
+                    </td>
+                    {/* Circulating Supply */}
+                    <td className="px-4 py-2">
+                      {renderLargeNumber(
+                        (
+                          parseInt(item.mints) * parseInt(item.amount) +
+                          parseInt(item.premine)
+                        ).toString()
+                      )}
+                    </td>
+                    {/* Total Mints */}
+                    <td className="px-4 py-2">
+                      {renderLargeNumber(item.mints)}
+                    </td>
+
+                    {/* Max Supply */}
+                    <td className="px-4 py-2">
+                      {renderLargeNumber(
+                        (
+                          parseInt(item.cap) * parseInt(item.amount) +
+                          parseInt(item.premine)
+                        ).toString()
+                      )}
+                    </td>
+                    {/* Premine */}
+                    <td className="px-4 py-2">
+                      {renderLargeNumber(
+                        parseInt(item.premine) > 0 ? item.premine : "-"
+                      )}
+                    </td>
+                    {/* Divisibility */}
+                    {/* <td className="px-4 py-2">{item.divisibility}</td> */}
+                    {/* Mintable */}
+                    <td className="px-4 py-2">
+                      {item.mintable === "true" &&
+                      parseInt(item.end) >= blockCount
+                        ? "🟩"
+                        : "🟥"}
+                    </td>
+                  </tr>
+                ))}
+            </tbody>
+          </table>
+        </div>
+      )}
     </div>
   );
 }
