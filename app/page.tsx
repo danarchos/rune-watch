@@ -98,6 +98,7 @@ export default function Page() {
         color="#5744b5"
         radius="9"
         ariaLabel="three-dots-loading"
+        // @ts-ignore
         wrapperStyle={{ marginTop: 100 }}
       />
 
