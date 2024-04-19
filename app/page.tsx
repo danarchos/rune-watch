@@ -311,7 +311,7 @@ export default function Page() {
                   <tr key={index}>
                     {/* Name */}
                     <Link
-                      href={`https://signet.ordinals.com/rune/${item.title}`}
+                      href={`https://ordinals.com/rune/${item.title}`}
                       target="_blank"
                     >
                       <td className="text-left px-4 py-2 flex flex-row items-center">
