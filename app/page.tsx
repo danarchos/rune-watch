@@ -92,6 +92,8 @@ export default function Page() {
               parseInt(item.premine),
             timestamp: new Date(item.timestamp).getTime(), // Convert to time in milliseconds once here
           }));
+
+          enrichedData.sort((a: any, b: any) => a.number - b.number);
           setOriginalData(enrichedData); // Set original data
           setData(enrichedData); // Set viewable data
         }
