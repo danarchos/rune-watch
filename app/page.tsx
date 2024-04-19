@@ -176,6 +176,20 @@ export default function Page() {
     setSortConfig({ field, direction });
   };
 
+  // @ts-ignore
+  const renderMaxSupply = (cap: string, amount: string, premine: string) => {
+    // Convert strings to BigInt
+    const bigCap = BigInt(cap);
+    const bigAmount = BigInt(amount);
+    const bigPremine = BigInt(premine);
+
+    // Perform arithmetic with BigInt
+    const bigNumber = bigCap * bigAmount + bigPremine;
+
+    // Since renderLargeNumber might not support BigInt, you will need to convert it safely
+    return renderLargeNumber(bigNumber.toString());
+  };
+
   return (
     <div className="flex-1 w-full flex flex-col items-center pb-8 px-4">
       <div className="mt-6 flex flex-row gap-2 items-center justify-between w-full pl-2 pr-2">
@@ -333,12 +347,7 @@ export default function Page() {
 
                     {/* Max Supply */}
                     <td className="px-4 py-2">
-                      {renderLargeNumber(
-                        (
-                          parseInt(item.cap) * parseInt(item.amount) +
-                          parseInt(item.premine)
-                        ).toString()
-                      )}
+                      {renderMaxSupply(item.cap, item.amount, item.premine)}
                     </td>
                     {/* Mint Transactions */}
                     <td className="px-4 py-2">
