@@ -10,16 +10,50 @@ export default function Page() {
   const [blockCount, setBlockCount] = useState(1000000);
   const [loading, setLoading] = useState(true);
   const [sortConfig, setSortConfig] = useState({ field: "", direction: "" });
+  const [timeFilter, setTimeFilter] = useState("all");
+  const [originalData, setOriginalData] = useState([]);
+
+  useEffect(() => {
+    const now = Date.now();
+    const filteredData = originalData.filter((item: any) => {
+      switch (timeFilter) {
+        case "1h":
+          return now - item.timestamp < 3600000; // 1 hour in milliseconds
+        case "1d":
+          return now - item.timestamp < 86400000; // 1 day in milliseconds
+        case "1w":
+          return now - item.timestamp < 604800000; // 1 week in milliseconds
+        case "all":
+        default:
+          return true; // No filter applied
+      }
+    });
+
+    setData(filteredData);
+  }, [timeFilter, originalData]);
 
   useEffect(() => {
     if (!data) return;
 
     // @ts-ignore
     const sortData = (data, { field, direction }) => {
-      if (!field || !direction) return data; // Return unsorted data if no sort configuration
       return [...data].sort((a, b) => {
-        if (a[field] < b[field]) return direction === "ascending" ? -1 : 1;
-        if (a[field] > b[field]) return direction === "ascending" ? 1 : -1;
+        // Convert to integers if sorting by fields that are numeric
+        let first =
+          field === "mints" || field === "maxSupply"
+            ? parseInt(a[field])
+            : a[field];
+        let second =
+          field === "mints" || field === "maxSupply"
+            ? parseInt(b[field])
+            : b[field];
+
+        if (first < second) {
+          return direction === "ascending" ? -1 : 1;
+        }
+        if (first > second) {
+          return direction === "ascending" ? 1 : -1;
+        }
         return 0;
       });
     };
@@ -41,9 +75,10 @@ export default function Page() {
         }
         const result = await res.json();
 
+        setBlockCount(result.blockCount);
         if (result && result.data) {
-          // @ts-ignore
-          const enrichedData = result.data.map((item) => ({
+          // Map and enrich data
+          const enrichedData = result.data.map((item: any) => ({
             ...item,
             circulatingSupply:
               parseInt(item.mints) * parseInt(item.amount) +
@@ -55,8 +90,10 @@ export default function Page() {
             maxSupply:
               parseInt(item.cap) * parseInt(item.amount) +
               parseInt(item.premine),
+            timestamp: new Date(item.timestamp).getTime(), // Convert to time in milliseconds once here
           }));
-          setData(enrichedData);
+          setOriginalData(enrichedData); // Set original data
+          setData(enrichedData); // Set viewable data
         }
         setLoading(false);
       } catch (error) {
@@ -139,9 +176,50 @@ export default function Page() {
 
   return (
     <div className="flex-1 w-full flex flex-col items-center pb-8 px-4">
-      <div className="mt-6 flex flex-row gap-2 items-center justify-center">
+      <div className="mt-6 flex flex-row gap-2 items-center justify-between w-full pl-2 pr-2">
         <Logo />
-        <div className="text-sm">(signet)</div>
+        <div className="flex">
+          <button
+            className={`px-3 py-1 mx-1 text-sm font-medium rounded-md ${
+              timeFilter === "1h"
+                ? "bg-purple-500 text-white"
+                : "bg-gray-200 text-gray-800"
+            }`}
+            onClick={() => setTimeFilter("1h")}
+          >
+            1h
+          </button>
+          <button
+            className={`px-3 py-1 mx-1 text-sm font-medium rounded-md ${
+              timeFilter === "1d"
+                ? "bg-purple-500 text-white"
+                : "bg-gray-200 text-gray-800"
+            }`}
+            onClick={() => setTimeFilter("1d")}
+          >
+            1d
+          </button>
+          <button
+            className={`px-3 py-1 mx-1 text-sm font-medium rounded-md ${
+              timeFilter === "1w"
+                ? "bg-purple-500 text-white"
+                : "bg-gray-200 text-gray-800"
+            }`}
+            onClick={() => setTimeFilter("1w")}
+          >
+            1w
+          </button>
+          <button
+            className={`px-3 py-1 mx-1 text-sm font-medium rounded-md ${
+              timeFilter === "all"
+                ? "bg-purple-500 text-white"
+                : "bg-gray-200 text-gray-800"
+            }`}
+            onClick={() => setTimeFilter("all")}
+          >
+            All
+          </button>
+        </div>
       </div>
 
       <ThreeDots
@@ -190,7 +268,13 @@ export default function Page() {
                 >
                   {renderSortArrow("maxSupply")} Max Supply
                 </th>
-                <th className="px-4 py-2">Mint Transactions</th>
+                <th
+                  className="px-4 py-2 cursor-pointer"
+                  onClick={() => requestSort("mints")}
+                >
+                  {renderSortArrow("mints")} Mint Transactions
+                </th>
+
                 <th className="px-4 py-2">
                   Premine{" "}
                   <span
