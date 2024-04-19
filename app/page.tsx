@@ -1,5 +1,6 @@
 "use client";
 import { Logo } from "@/components/Logo";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { ThreeDots } from "react-loader-spinner";
 
@@ -131,17 +132,22 @@ export default function Page() {
                 .map((item: any, index: number) => (
                   <tr key={index}>
                     {/* Name */}
-                    <td className="text-left px-4 py-2 flex flex-row items-center">
-                      <div className="bg-[#494366] w-[40px] p-1 items-center flex justify-center mr-4 rounded">
-                        <span>#{item.number}</span>
-                      </div>
+                    <Link
+                      href={`https://signet.ordinals.com/rune/${item.title}`}
+                      target="_blank"
+                    >
+                      <td className="text-left px-4 py-2 flex flex-row items-center">
+                        <div className="bg-[#494366] w-[40px] p-1 items-center flex justify-center mr-4 rounded">
+                          <span>#{item.number}</span>
+                        </div>
 
-                      <div className="w-[50px] flex items-center justify-center text">
-                        <span className="text-3xl">{item.symbol}</span>
-                      </div>
+                        <div className="w-[50px] flex items-center justify-center text">
+                          <span className="text-3xl">{item.symbol}</span>
+                        </div>
 
-                      <span className="ml-2">{item.title}</span>
-                    </td>
+                        <span className="ml-2">{item.title}</span>
+                      </td>
+                    </Link>
                     {/* Mint Amount */}
                     <td className="px-4 py-2">
                       {renderLargeNumber(item.amount)}
