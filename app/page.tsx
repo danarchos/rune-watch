@@ -117,9 +117,9 @@ export default function Page() {
             <thead>
               <tr>
                 <th className="text-left px-4 py-2">Rune</th>{" "}
-                <th className="px-4 py-2">Supply per mint</th>
+                <th className="px-4 py-2">Supply Per mint</th>
                 <th className="px-4 py-2">Circulating Supply</th>
-                <th className="px-4 py-2">Mint transactions</th>
+                <th className="px-4 py-2">Mint Transactions</th>
                 <th className="px-4 py-2">% Minted</th>
                 <th className="px-4 py-2">Max Supply</th>
                 <th className="px-4 py-2">
