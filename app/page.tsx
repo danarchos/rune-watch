@@ -9,15 +9,31 @@ export default function Page() {
   const [hidePremineRows, setHidePremineRows] = useState(false);
   const [blockCount, setBlockCount] = useState(1000000);
   const [loading, setLoading] = useState(true);
+  const [sortConfig, setSortConfig] = useState({ field: "", direction: "" });
 
-  // useEffect does not directly support async/await, so we define an async function inside it
+  useEffect(() => {
+    if (!data) return;
+
+    // @ts-ignore
+    const sortData = (data, { field, direction }) => {
+      if (!field || !direction) return data; // Return unsorted data if no sort configuration
+      return [...data].sort((a, b) => {
+        if (a[field] < b[field]) return direction === "ascending" ? -1 : 1;
+        if (a[field] > b[field]) return direction === "ascending" ? 1 : -1;
+        return 0;
+      });
+    };
+
+    const sortedData = sortData(data, sortConfig);
+    setData(sortedData);
+  }, [sortConfig]);
+
   useEffect(() => {
     async function fetchData() {
       try {
         const res = await fetch(`/api/runes`, {
           headers: {
             "Content-Type": "application/json",
-            // Include other necessary headers
           },
         });
         if (!res.ok) {
@@ -25,15 +41,22 @@ export default function Page() {
         }
         const result = await res.json();
 
-        setBlockCount(result.blockCount);
-        // Assuming `result.data` is the array you want to sort
-        // and that it's available directly under the `result` object.
-        // Adjust the path if your data structure is different.
         if (result && result.data) {
-          // Sort data by rune number in ascending order
           // @ts-ignore
-          const sortedData = result.data.sort((a, b) => a.number - b.number);
-          setData(sortedData);
+          const enrichedData = result.data.map((item) => ({
+            ...item,
+            circulatingSupply:
+              parseInt(item.mints) * parseInt(item.amount) +
+              parseInt(item.premine),
+            percentMinted: item.cap
+              ? ((parseInt(item.cap) - item.remaining) / parseInt(item.cap)) *
+                100
+              : 0,
+            maxSupply:
+              parseInt(item.cap) * parseInt(item.amount) +
+              parseInt(item.premine),
+          }));
+          setData(enrichedData);
         }
         setLoading(false);
       } catch (error) {
@@ -43,7 +66,7 @@ export default function Page() {
     }
 
     fetchData();
-  }, []); // The empty array means this effect runs once on mount
+  }, []);
 
   const togglePremineVisibility = () => {
     setHidePremineRows(!hidePremineRows);
@@ -85,12 +108,33 @@ export default function Page() {
     return num.toString(); // Return the number as a string for consistency
   };
 
+  const renderSortArrow = (fieldName: any) => {
+    if (sortConfig.field !== fieldName) {
+      return null; // No arrow if not sorting by this column
+    }
+    return sortConfig.direction === "ascending" ? " ↑" : " ↓";
+  };
+
   const renderPercentLeft = (remaining: number, cap: number) => {
     if (!remaining || !cap) return "-";
     const number = ((cap - remaining) / cap) * 100;
     if (number < 0.01) return 0 + "%";
     if (number >= 10) return number.toFixed(0) + "%";
     return number.toFixed(1) + "%";
+  };
+
+  const requestSort = (field: any) => {
+    let direction = "ascending"; // Default to ascending
+    // If currently sorting by this field and in ascending, switch to descending
+    if (sortConfig.field === field && sortConfig.direction === "ascending") {
+      direction = "descending";
+    } else if (
+      sortConfig.field === field &&
+      sortConfig.direction === "descending"
+    ) {
+      direction = "ascending"; // Cycle back to ascending instead of clearing
+    }
+    setSortConfig({ field, direction });
   };
 
   return (
@@ -112,16 +156,41 @@ export default function Page() {
       />
 
       {!loading && (
-        <div className="w-full overflow-x-auto mt-6">
+        <div className="w-full overflow-x-auto mt-6 ">
           <table className="min-w-full divide-y table-auto text-center">
             <thead>
-              <tr>
-                <th className="text-left px-4 py-2">Rune</th>{" "}
-                <th className="px-4 py-2">Supply Per mint</th>
-                <th className="px-4 py-2">Circulating Supply</th>
+              <tr className="text-xs">
+                <th
+                  className="text-left px-4 py-2 cursor-pointer"
+                  onClick={() => requestSort("number")}
+                >
+                  Rune{renderSortArrow("number")}
+                </th>
+                <th
+                  className="px-4 py-2 cursor-pointer"
+                  onClick={() => requestSort("amount")}
+                >
+                  {renderSortArrow("amount")} Supply Per Mint
+                </th>
+                <th
+                  className="px-4 py-2 cursor-pointer"
+                  onClick={() => requestSort("circulatingSupply")}
+                >
+                  {renderSortArrow("circulatingSupply")} Circulating Supply
+                </th>
+                <th
+                  className="px-4 py-2 cursor-pointer"
+                  onClick={() => requestSort("percentMinted")}
+                >
+                  {renderSortArrow("percentMinted")} % Minted
+                </th>
+                <th
+                  className="px-4 py-2 cursor-pointer"
+                  onClick={() => requestSort("maxSupply")}
+                >
+                  {renderSortArrow("maxSupply")} Max Supply
+                </th>
                 <th className="px-4 py-2">Mint Transactions</th>
-                <th className="px-4 py-2">% Minted</th>
-                <th className="px-4 py-2">Max Supply</th>
                 <th className="px-4 py-2">
                   Premine{" "}
                   <span
@@ -131,10 +200,10 @@ export default function Page() {
                     {hidePremineRows ? "👀" : "🚫"}
                   </span>
                 </th>
-                {/* <th className="px-4 py-2">Divisibility</th> */}
                 <th className="px-4 py-2">Mintable</th>
               </tr>
             </thead>
+
             <tbody>
               {data
                 ?.filter((item: any) => !hidePremineRows || item.premine <= 0)
@@ -170,10 +239,6 @@ export default function Page() {
                         ).toString()
                       )}
                     </td>
-                    {/* Total Mints */}
-                    <td className="px-4 py-2">
-                      {renderLargeNumber(item.mints)}
-                    </td>
 
                     {/* Total Mints */}
                     <td className="px-4 py-2">
@@ -188,6 +253,10 @@ export default function Page() {
                           parseInt(item.premine)
                         ).toString()
                       )}
+                    </td>
+                    {/* Mint Transactions */}
+                    <td className="px-4 py-2">
+                      {renderLargeNumber(item.mints)}
                     </td>
                     {/* Premine */}
                     <td className="px-4 py-2">
