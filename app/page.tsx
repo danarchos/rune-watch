@@ -164,7 +164,7 @@ export default function Page() {
                   className="text-left px-4 py-2 cursor-pointer"
                   onClick={() => requestSort("number")}
                 >
-                  Rune{renderSortArrow("number")}
+                  {renderSortArrow("number")} Rune
                 </th>
                 <th
                   className="px-4 py-2 cursor-pointer"
