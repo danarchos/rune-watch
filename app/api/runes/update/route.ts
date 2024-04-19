@@ -5,7 +5,7 @@ import { createClient } from "@/utils/supabase/server";
 export const maxDuration = 300;
 
 async function fetchAndParseHTML() {
-  const response = await fetch("http://54.160.80.123:8181/runes");
+  const response = await fetch("https://ordinals.com/runes");
   const html = await response.text();
   const dom = new JSDOM(html);
   const document = dom.window.document;
@@ -90,7 +90,7 @@ export async function GET(request: NextRequest) {
   const supabase = createClient();
   const runes = await fetchAndParseHTML();
   const allDetailsPromises = runes.map((rune: string) =>
-    parseRuneDetails(`http://54.160.80.123:8181/rune/${rune}`)
+    parseRuneDetails(`https://ordinals.com/rune/${rune}`)
   );
 
   const allDetails = await Promise.all(allDetailsPromises);

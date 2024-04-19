@@ -5,7 +5,7 @@ export async function GET(request: NextRequest) {
   const supabase = createClient();
   const response = await supabase.from("runes").select("*");
 
-  const res = await fetch("http://54.160.80.123:8181/blockcount");
+  const res = await fetch("https://ordinals.com/blockcount");
 
   let blockCount = 1000000;
   if (res.ok) {
