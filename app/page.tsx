@@ -85,6 +85,14 @@ export default function Page() {
     return num.toString(); // Return the number as a string for consistency
   };
 
+  const renderPercentLeft = (remaining: number, cap: number) => {
+    if (!remaining || !cap) return "-";
+    const number = ((cap - remaining) / cap) * 100;
+    if (number < 0.01) return 0 + "%";
+    if (number >= 10) return number.toFixed(0) + "%";
+    return number.toFixed(1) + "%";
+  };
+
   return (
     <div className="flex-1 w-full flex flex-col items-center pb-8 px-4">
       <div className="mt-6 flex flex-row gap-2 items-center justify-center">
@@ -112,6 +120,7 @@ export default function Page() {
                 <th className="px-4 py-2">Supply per mint</th>
                 <th className="px-4 py-2">Circulating Supply</th>
                 <th className="px-4 py-2">Mint transactions</th>
+                <th className="px-4 py-2">% Minted</th>
                 <th className="px-4 py-2">Max Supply</th>
                 <th className="px-4 py-2">
                   Premine{" "}
@@ -164,6 +173,11 @@ export default function Page() {
                     {/* Total Mints */}
                     <td className="px-4 py-2">
                       {renderLargeNumber(item.mints)}
+                    </td>
+
+                    {/* Total Mints */}
+                    <td className="px-4 py-2">
+                      {renderPercentLeft(item.remaining, item.cap)}
                     </td>
 
                     {/* Max Supply */}
