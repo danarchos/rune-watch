@@ -4,7 +4,8 @@ import { useEffect, useState } from "react";
 
 export default function Page() {
   const [data, setData] = useState<any>(null);
-  const [hidePremineRows, setHidePremineRows] = useState(true);
+  const [hidePremineRows, setHidePremineRows] = useState(false);
+  const [blockCount, setBlockCount] = useState(1000000);
 
   // useEffect does not directly support async/await, so we define an async function inside it
   useEffect(() => {
@@ -20,6 +21,8 @@ export default function Page() {
           throw new Error("Failed to fetch data");
         }
         const result = await res.json();
+
+        setBlockCount(result.blockCount);
         // Assuming `result.data` is the array you want to sort
         // and that it's available directly under the `result` object.
         // Adjust the path if your data structure is different.
@@ -77,21 +80,6 @@ export default function Page() {
     return num.toString(); // Return the number as a string for consistency
   };
 
-  // const renderPercentMinted = (supply: number, cap: number) => {
-  //   if (!supply) return "-";
-  //   if (!cap) return "-";
-
-  //   let percent = 0;
-
-  //   percent = (supply / cap) * 100;
-
-  //   if (percent < 0.0) return percent.toFixed(0) + "%";
-  //   if (percent < 1) return percent.toFixed(2) + "%";
-  //   return percent.toFixed(0) + "%";
-  // };
-
-  console.log({ data });
-
   return (
     <div className="flex-1 w-full flex flex-col items-center pb-8 px-4">
       <div className="mt-6 flex flex-row gap-2 items-center justify-center">
@@ -104,9 +92,9 @@ export default function Page() {
           <thead>
             <tr>
               <th className="text-left px-4 py-2">Rune</th>{" "}
-              <th className="px-4 py-2">Per mint</th>
-              <th className="px-4 py-2">Mint count</th>
+              <th className="px-4 py-2">Supply per mint</th>
               <th className="px-4 py-2">Circulating Supply</th>
+              <th className="px-4 py-2">Mint transactions</th>
               <th className="px-4 py-2">Max Supply</th>
               <th className="px-4 py-2">
                 Premine{" "}
@@ -142,8 +130,6 @@ export default function Page() {
                   <td className="px-4 py-2">
                     {renderLargeNumber(item.amount)}
                   </td>
-                  {/* Total Mints */}
-                  <td className="px-4 py-2">{renderLargeNumber(item.mints)}</td>
                   {/* Circulating Supply */}
                   <td className="px-4 py-2">
                     {renderLargeNumber(
@@ -153,6 +139,9 @@ export default function Page() {
                       ).toString()
                     )}
                   </td>
+                  {/* Total Mints */}
+                  <td className="px-4 py-2">{renderLargeNumber(item.mints)}</td>
+
                   {/* Max Supply */}
                   <td className="px-4 py-2">
                     {renderLargeNumber(
@@ -172,7 +161,10 @@ export default function Page() {
                   {/* <td className="px-4 py-2">{item.divisibility}</td> */}
                   {/* Mintable */}
                   <td className="px-4 py-2">
-                    {item.mintable === "true" ? "🟩" : "🟥"}
+                    {item.mintable === "true" &&
+                    parseInt(item.end) >= blockCount
+                      ? "🟩"
+                      : "🟥"}
                   </td>
                 </tr>
               ))}
