@@ -194,6 +194,9 @@ export default function Page() {
     <div className="flex-1 w-full flex flex-col items-center pb-8 px-4">
       <div className="mt-6 flex flex-row gap-2 items-center justify-between w-full pl-2 pr-2">
         <Logo />
+        <span className="text-xs">
+          (Updates ever 10 mins. Use ordinals.com for real-time data)
+        </span>
         <div className="flex">
           <button
             className={`px-3 py-1 mx-1 text-sm font-medium rounded-md ${
