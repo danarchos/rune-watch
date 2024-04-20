@@ -178,16 +178,20 @@ export default function Page() {
 
   // @ts-ignore
   const renderMaxSupply = (cap: string, amount: string, premine: string) => {
-    // Convert strings to BigInt
-    const bigCap = BigInt(cap);
-    const bigAmount = BigInt(amount);
-    const bigPremine = BigInt(premine);
+    try {
+      // Convert strings to BigInt
+      const bigCap = BigInt(cap);
+      const bigAmount = BigInt(amount);
+      const bigPremine = BigInt(premine);
 
-    // Perform arithmetic with BigInt
-    const bigNumber = bigCap * bigAmount + bigPremine;
+      // Perform arithmetic with BigInt
+      const bigNumber = bigCap * bigAmount + bigPremine;
 
-    // Since renderLargeNumber might not support BigInt, you will need to convert it safely
-    return renderLargeNumber(bigNumber.toString());
+      // Since renderLargeNumber might not support BigInt, you will need to convert it safely
+      return renderLargeNumber(bigNumber.toString());
+    } catch (error) {
+      return "-";
+    }
   };
 
   return (
