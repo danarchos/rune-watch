@@ -195,7 +195,7 @@ export default function Page() {
       <div className="mt-6 flex flex-row gap-2 items-center justify-between w-full pl-2 pr-2">
         <Logo />
         <span className="text-xs">
-          (Updates ever 10 mins. Use ordinals.com for real-time data)
+          (Updates every 10 mins. Use ordinals.com for real-time data)
         </span>
         <div className="flex">
           <button
