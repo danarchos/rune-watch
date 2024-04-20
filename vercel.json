@@ -2,7 +2,7 @@
   "crons": [
     {
       "path": "/api/runes/update",
-      "schedule": "*/10 * * * *"
+      "schedule": "0 * * * *"
     }
   ]
 }
